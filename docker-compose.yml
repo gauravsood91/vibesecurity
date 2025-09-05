@@ -9,6 +9,7 @@ services:
       - POSTGRES_URL=jdbc:postgresql://db-service:5432/scannerdb
       - POSTGRES_USER=user
       - POSTGRES_PASSWORD=password
+      - BITBUCKET_USERNAME=${BITBUCKET_USERNAME}
       - BITBUCKET_APP_PASSWORD=${BITBUCKET_APP_PASSWORD}
       - OPENAI_API_KEY=${OPENAI_API_KEY}
     volumes:
