@@ -1,0 +1,46 @@
+version: '3.8'
+
+services:
+  backend-service:
+    build: ./backend
+    ports:
+      - "8080:8080"
+    environment:
+      - POSTGRES_URL=jdbc:postgresql://db-service:5432/scannerdb
+      - POSTGRES_USER=user
+      - POSTGRES_PASSWORD=password
+      - BITBUCKET_APP_PASSWORD=${BITBUCKET_APP_PASSWORD}
+      - OPENAI_API_KEY=${OPENAI_API_KEY}
+    volumes:
+      - shared_repos:/shared/repos
+    networks:
+      - scanner-network
+    depends_on:
+      - db-service
+
+  frontend-service:
+    build: ./frontend
+    ports:
+      - "3000:3000"
+    networks:
+      - scanner-network
+    depends_on:
+      - backend-service
+
+  db-service:
+    image: postgres:13
+    environment:
+      - POSTGRES_DB=scannerdb
+      - POSTGRES_USER=user
+      - POSTGRES_PASSWORD=password
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - scanner-network
+
+volumes:
+  shared_repos:
+  postgres_data:
+
+networks:
+  scanner-network:
